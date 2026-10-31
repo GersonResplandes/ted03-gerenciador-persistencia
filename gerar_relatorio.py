@@ -6,7 +6,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from reportlab.platypus import (
-    PageBreak, Paragraph, Preformatted, SimpleDocTemplate, Spacer, Table, TableStyle
+    Image, KeepTogether, PageBreak, Paragraph, Preformatted, SimpleDocTemplate, Spacer, Table, TableStyle
 )
 
 
@@ -31,9 +31,16 @@ def gerar():
     tabela.setStyle(TableStyle([("BACKGROUND", (0,0), (-1,0), colors.HexColor("#1E3A5F")), ("TEXTCOLOR", (0,0), (-1,0), colors.white), ("GRID", (0,0), (-1,-1), 0.5, colors.grey), ("VALIGN", (0,0), (-1,-1), "TOP"), ("BACKGROUND", (0,1), (-1,-1), colors.HexColor("#F8FAFC")), ("PADDING", (0,0), (-1,-1), 6)]))
     story += [tabela, PageBreak(), Paragraph("4. Implementação", estilos["Heading1"]), Paragraph("Todas as aberturas usam o gerenciador de contexto with open(...), com encoding UTF-8. Assim, os arquivos são fechados automaticamente mesmo se ocorrer uma exceção.", estilos["BodyText"]), Preformatted('with open(caminho, "r", encoding="utf-8", newline="") as arquivo:\n    return list(csv.DictReader(arquivo))', estilos["Codigo"]), Spacer(1, 8), Paragraph("Antes de escrever em um arquivo existente, _criar_backup copia a versão anterior para dados/backups com data e hora. Erros de arquivo inexistente, permissão, codificação e JSON inválido são convertidos em mensagens amigáveis por PersistenciaError.", estilos["BodyText"]), Preformatted('backup = _criar_backup(caminho)\nwith open(caminho, "w", encoding="utf-8") as arquivo:\n    json.dump(dados, arquivo, ensure_ascii=False, indent=4)', estilos["Codigo"]), Paragraph("5. Testes e evidências de execução", estilos["Heading1"]), Paragraph("A suíte automatizada verifica conversão nos dois sentidos, preservação dos registros, backup anterior à sobrescrita e tratamento de arquivo inexistente.", estilos["BodyText"]), Preformatted('3 passed in 0.13s', estilos["Codigo"]), Spacer(1, 8)]
 
-    evidencias = Table([[Paragraph("Cenário", estilos["TabelaCabecalho"]), Paragraph("Resultado observado", estilos["TabelaCabecalho"])], [Paragraph("CSV para JSON", estilos["BodyText"]), Paragraph("Conversão concluída; registros preservados em dados/alunos.json.", estilos["BodyText"])], [Paragraph("JSON para CSV", estilos["BodyText"]), Paragraph("Conversão concluída em dados/alunos_convertido.csv.", estilos["BodyText"])], [Paragraph("Backup", estilos["BodyText"]), Paragraph("Ao sobrescrever destino existente, uma cópia datada é criada em dados/backups/.", estilos["BodyText"])], [Paragraph("Erro", estilos["BodyText"]), Paragraph("Arquivo ausente: mensagem 'CSV não encontrado' sem encerramento inesperado.", estilos["BodyText"])]], colWidths=[5*cm, 10*cm])
-    evidencias.setStyle(TableStyle([("BACKGROUND", (0,0), (-1,0), colors.HexColor("#1E3A5F")), ("TEXTCOLOR", (0,0), (-1,0), colors.white), ("GRID", (0,0), (-1,-1), 0.5, colors.grey), ("VALIGN", (0,0), (-1,-1), "TOP"), ("PADDING", (0,0), (-1,-1), 6)]))
-    story += [evidencias, PageBreak(), Paragraph("6. Conclusão", estilos["Heading1"]), Paragraph("Os objetivos propostos foram atendidos: o sistema lê e escreve CSV e JSON, converte entre os formatos sem perda dos registros, utiliza with open(...) e UTF-8, trata falhas de E/S e cria backups antes de alterações. A aplicação é modular e possui testes automatizados para os principais cenários.", estilos["BodyText"]), Paragraph("7. Referências", estilos["Heading1"]), Paragraph("PYTHON SOFTWARE FOUNDATION. csv - CSV File Reading and Writing. Documentação oficial do Python.\nPYTHON SOFTWARE FOUNDATION. json - JSON encoder and decoder. Documentação oficial do Python.\nPYTHON SOFTWARE FOUNDATION. Built-in Functions: open. Documentação oficial do Python.", estilos["BodyText"])]
+    evidencias = [
+        ("Figura 1 - Conversão de CSV para JSON", BASE / "evidencias" / "01_csv_para_json.png"),
+        ("Figura 2 - Conversão de JSON para CSV com backup", BASE / "evidencias" / "02_json_para_csv_backup.png"),
+        ("Figura 3 - Tratamento de arquivo inexistente", BASE / "evidencias" / "03_erro_arquivo.png"),
+        ("Figura 4 - Conversão de CSV para JSON com backup", BASE / "evidencias" / "04_csv_para_json_backup.png"),
+    ]
+    for legenda, caminho in evidencias:
+        figura = Image(str(caminho), width=15*cm, height=7.93*cm)
+        story.append(KeepTogether([Paragraph(legenda, estilos["Heading3"]), figura, Spacer(1, 8)]))
+    story += [PageBreak(), Paragraph("6. Conclusão", estilos["Heading1"]), Paragraph("Os objetivos propostos foram atendidos: o sistema lê e escreve CSV e JSON, converte entre os formatos sem perda dos registros, utiliza with open(...) e UTF-8, trata falhas de E/S e cria backups antes de alterações. A aplicação é modular e possui testes automatizados para os principais cenários.", estilos["BodyText"]), Paragraph("7. Referências", estilos["Heading1"]), Paragraph("PYTHON SOFTWARE FOUNDATION. csv - CSV File Reading and Writing. Documentação oficial do Python.\nPYTHON SOFTWARE FOUNDATION. json - JSON encoder and decoder. Documentação oficial do Python.\nPYTHON SOFTWARE FOUNDATION. Built-in Functions: open. Documentação oficial do Python.", estilos["BodyText"])]
 
     def rodape(canvas, doc):
         canvas.saveState()
