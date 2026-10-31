@@ -7,6 +7,13 @@ Projeto em Python para leitura, escrita e conversão de dados entre CSV e JSON, 
 - Gérson Resplandes de Sá Sousa
 - Erdeson Monteiro Candeias
 
+## Identificação acadêmica
+
+- Instituição: Centro Universitário de Balsas - Unibalsas
+- Curso: Análise e Desenvolvimento de Sistemas (ADS)
+- Disciplina: Programação Avançada
+- Turma/período: 2026.2 - segundo período
+
 ## Execução
 
 ```bash
