@@ -1,0 +1,17 @@
+[
+    {
+        "nome": "Ana Souza",
+        "idade": "20",
+        "curso": "Computação"
+    },
+    {
+        "nome": "Carlos Lima",
+        "idade": "22",
+        "curso": "Sistemas de Informação"
+    },
+    {
+        "nome": "Beatriz Alves",
+        "idade": "19",
+        "curso": "Engenharia de Software"
+    }
+]
